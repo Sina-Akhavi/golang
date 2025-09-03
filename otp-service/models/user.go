@@ -1,23 +1,27 @@
-// models/user.go
 package models
 
-import "strconv"
+import ("time"
+		"strconv"
+)
 
+// User struct represents a user with phone number and registration date
 type User struct {
-    Phone string `json:"phone"`
-    Name  string `json:"name"`
+    Phone           string    `json:"phone"`           // User's phone number
+    Name            string    `json:"name"`            // User's name
+    RegistrationDate time.Time `json:"registration_date"` // User's registration date
 }
 
-var Users = map[string]User{} // In-memory user store
+// In-memory user store
+var Users = map[string]User{} // Map to store users
 
 func InitUsers() {
-    // Initialize 20 users for testing
     for i := 1; i <= 20; i++ {
         phone := "123456" + formatNumber(i) // Generate phone numbers dynamically
         name := "User " + formatNumber(i)  // Generate user names dynamically
         Users[phone] = User{
-            Phone: phone,
-            Name:  name,
+            Phone:           phone,
+            Name:            name,
+            RegistrationDate: time.Now(), // Set registration date to current time
         }
     }
 }
