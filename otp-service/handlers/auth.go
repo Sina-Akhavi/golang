@@ -54,7 +54,8 @@ func ValidateOTP(c *gin.Context) {
     user, exists := models.Users[request.Phone]
     if !exists {
         // Register user
-        user = models.User{Phone: request.Phone, Name: ""}
+        user = models.User{Phone: request.Phone, Name: "", RegistrationDate: time.Now()}
+
         models.Users[request.Phone] = user
     }
 
