@@ -1,4 +1,147 @@
+definitions:
+  models.User:
+    properties:
+      name:
+        description: User's name
+        type: string
+      phone:
+        description: User's phone number
+        type: string
+      registration_date:
+        description: User's registration date
+        type: string
+    type: object
 info:
   contact: {}
-paths: {}
+paths:
+  /request-otp:
+    post:
+      consumes:
+      - application/json
+      description: Generate a one-time password (OTP) for the given phone number
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties: true
+            type: object
+        "429":
+          description: Too many requests
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Generate an OTP
+      tags:
+      - Auth
+  /user:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a single user by their phone number
+      parameters:
+      - description: Phone number of the user
+        in: query
+        name: phone
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User found
+          schema:
+            $ref: '#/definitions/models.User'
+        "404":
+          description: User not found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get a user by phone number
+      tags:
+      - User
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all users with pagination based on query parameters
+      parameters:
+      - description: 'Page number (default: 1)'
+        in: query
+        name: page
+        type: integer
+      - description: 'Number of users per page (default: 10)'
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Invalid query parameters
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get a paginated list of users
+      tags:
+      - User
+    post:
+      consumes:
+      - application/json
+      description: Create a new user with phone number and optional name
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: User created successfully
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid request payload
+          schema:
+            additionalProperties: true
+            type: object
+        "409":
+          description: User already exists
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create a new user
+      tags:
+      - User
+  /validate-otp:
+    post:
+      consumes:
+      - application/json
+      description: Validate a one-time password (OTP) for a phone number. If the user
+        doesn't exist, they will be registered.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Invalid or expired OTP
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Failed to generate token
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Validate an OTP
+      tags:
+      - Auth
 swagger: "2.0"

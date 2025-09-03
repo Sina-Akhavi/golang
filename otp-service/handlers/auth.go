@@ -12,6 +12,16 @@ import (
 var rateLimiter = utils.NewRateLimiter(3, 10*time.Minute) // 3 requests per 10 minutes
 
 
+// RequestOTP generates an OTP for the given phone number
+// @Summary Generate an OTP
+// @Description Generate a one-time password (OTP) for the given phone number
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Success 200
+// @Failure 400 {object} map[string]interface{} "Invalid request"
+// @Failure 429 {object} map[string]interface{} "Too many requests"
+// @Router /request-otp [post]
 func RequestOTP(c *gin.Context) {
     var request struct {
         Phone string `json:"phone"`
@@ -33,6 +43,17 @@ func RequestOTP(c *gin.Context) {
     c.JSON(http.StatusOK, gin.H{"message": "OTP generated", "otp": otp})
 }
 
+// ValidateOTP validates the OTP and registers/logs in the user
+// @Summary Validate an OTP
+// @Description Validate a one-time password (OTP) for a phone number. If the user doesn't exist, they will be registered.
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Success 200
+// @Failure 400 {object} map[string]interface{} "Invalid request"
+// @Failure 401 {object} map[string]interface{} "Invalid or expired OTP"
+// @Failure 500 {object} map[string]interface{} "Failed to generate token"
+// @Router /validate-otp [post]
 func ValidateOTP(c *gin.Context) {
     var request struct {
         Phone string `json:"phone"`

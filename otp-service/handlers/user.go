@@ -10,6 +10,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+
+// GetSingleUserByPhone retrieves a user by phone number
+// @Summary Get a user by phone number
+// @Description Retrieve a single user by their phone number
+// @Tags User
+// @Accept json
+// @Produce json
+// @Param phone query string true "Phone number of the user"
+// @Success 200 {object} models.User "User found"
+// @Failure 404 {object} map[string]interface{} "User not found"
+// @Router /user [get]
 func GetSingleUserByPhone(c *gin.Context) {
 	phone := c.Query("phone")
 
@@ -24,6 +35,17 @@ func GetSingleUserByPhone(c *gin.Context) {
 }
 
 
+// GetUsersWithPagination retrieves a paginated list of users
+// @Summary Get a paginated list of users
+// @Description Retrieve all users with pagination based on query parameters
+// @Tags User
+// @Accept json
+// @Produce json
+// @Param page query int false "Page number (default: 1)"
+// @Param limit query int false "Number of users per page (default: 10)"
+// @Success 200
+// @Failure 400 {object} map[string]interface{} "Invalid query parameters"
+// @Router /users [get]
 func GetUsersWithPagination(c *gin.Context) {
 	// Default values for pagination
 	defaultPage := 1
@@ -90,6 +112,15 @@ func GetUsersWithPagination(c *gin.Context) {
 }
 
 
+// @Summary Create a new user
+// @Description Create a new user with phone number and optional name
+// @Tags User
+// @Accept json
+// @Produce json
+// @Success 201 {object} map[string]interface{} "User created successfully"
+// @Failure 400 {object} map[string]interface{} "Invalid request payload"
+// @Failure 409 {object} map[string]interface{} "User already exists"
+// @Router /users [post]
 // CreateUser handles user creation
 func CreateUser(c *gin.Context) {
 	// Define the request structure
