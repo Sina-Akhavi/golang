@@ -5,6 +5,7 @@ import (
 	"otp-service/models"
 	"sort"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -85,5 +86,45 @@ func GetUsersWithPagination(c *gin.Context) {
 		"page":       page,
 		"limit":      limit,
 		"totalPages": (totalUsers + limit - 1) / limit, // Calculate total pages
+	})
+}
+
+
+// CreateUser handles user creation
+func CreateUser(c *gin.Context) {
+	// Define the request structure
+	var request struct {
+		Phone string `json:"phone" binding:"required"` // Phone is required
+		Name  string `json:"name"`                    // Name is optional
+	}
+
+	// Parse JSON payload
+	err := c.ShouldBindJSON(&request) // Bind the JSON payload to the `request` variable
+	if err != nil {                  // Check if an error occurred
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request payload"})
+		return
+	}
+
+	// Check if the phone number is already registered
+	_, exists := models.Users[request.Phone];
+	if exists {	
+		c.JSON(http.StatusConflict, gin.H{"error": "User already exists"})
+		return
+	}
+
+	// Create the new user
+	newUser := models.User{
+		Phone:           request.Phone,
+		Name:            request.Name,
+		RegistrationDate: time.Now(), // Set registration date to current time
+	}
+
+	// Store the new user in the in-memory map
+	models.Users[request.Phone] = newUser
+
+	// Respond with success and the created user data
+	c.JSON(http.StatusCreated, gin.H{
+		"message": "User created successfully",
+		"user":    newUser,
 	})
 }
