@@ -4,7 +4,6 @@ package main
 import (
     "otp-service/config"
     "otp-service/handlers"
-
     "github.com/gin-gonic/gin"
 )
 
@@ -14,6 +13,8 @@ func main() {
     router := gin.Default()
     router.POST("/request-otp", handlers.RequestOTP) // Request OTP
     router.POST("/validate-otp", handlers.ValidateOTP) // Validate OTP and login/register
+    router.GET("/user", handlers.GetSingleUserByPhone)
 
     router.Run(":8080") // Start server on port 8080
 }
+
