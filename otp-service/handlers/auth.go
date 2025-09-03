@@ -5,9 +5,12 @@ import (
     "net/http"
     "otp-service/models"
     "otp-service/utils"
-
+    "time"
     "github.com/gin-gonic/gin"
 )
+
+var rateLimiter = utils.NewRateLimiter(3, 10*time.Minute) // 3 requests per 10 minutes
+
 
 func RequestOTP(c *gin.Context) {
     var request struct {
@@ -19,6 +22,12 @@ func RequestOTP(c *gin.Context) {
         c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"}) // Handle the error
         return                  // Stop the function
     }
+
+    phone := request.Phone
+    if !rateLimiter.IsAllowed(phone) {
+		c.JSON(http.StatusTooManyRequests, gin.H{"error": "Too many requests. Please wait before trying again."})
+		return
+	}
 
     otp := utils.GenerateOTP(request.Phone)
     c.JSON(http.StatusOK, gin.H{"message": "OTP generated", "otp": otp})
