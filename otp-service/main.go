@@ -18,7 +18,7 @@ func main() {
     router.POST("/validate-otp", handlers.ValidateOTP) // Validate OTP and login/register
     router.GET("/user", handlers.GetSingleUserByPhone)
     router.GET("/users", handlers.GetUsersWithPagination) // Get paginated list of users
-
+    router.POST("/users", handlers.CreateUser)            // Create new user
 
     router.Run(":8080") // Start server on port 8080
 }
