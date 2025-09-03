@@ -2,10 +2,14 @@
 package main
 
 import (
-    "otp-service/config"
-    "otp-service/models"
-    "otp-service/handlers"
-    "github.com/gin-gonic/gin"
+	"otp-service/config"
+	"otp-service/handlers"
+	"otp-service/models"
+
+	"github.com/gin-gonic/gin"
+    "github.com/swaggo/gin-swagger" // Swagger UI integration
+	"github.com/swaggo/files"       // Swagger files handler
+	_ "otp-service/docs"            // Import the generated Swagger docs
 )
 
 func main() {
@@ -14,6 +18,7 @@ func main() {
 
     router := gin.Default()
     
+    router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
     router.POST("/request-otp", handlers.RequestOTP) // Request OTP
     router.POST("/validate-otp", handlers.ValidateOTP) // Validate OTP and login/register
     router.GET("/user", handlers.GetSingleUserByPhone)
@@ -22,4 +27,3 @@ func main() {
 
     router.Run(":8080") // Start server on port 8080
 }
-
