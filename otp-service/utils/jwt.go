@@ -6,7 +6,7 @@ import (
     "time"
 )
 
-var jwtKey = []byte("secret_key") // Replace with a secure key
+var JwtKey = []byte("secret_key") // Replace with a secure key
 
 type Claims struct {
     Phone string `json:"phone"`
