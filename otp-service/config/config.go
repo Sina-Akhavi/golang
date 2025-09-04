@@ -1,20 +1,36 @@
 package config
 
 import (
-    "github.com/go-redis/redis/v8"
-    "context"
+  "context"
+  "fmt"
+  "os"
+
+  "github.com/go-redis/redis/v8"
 )
 
-var RedisClient *redis.Client
-var Ctx = context.Background()
+var (
+  Ctx         = context.Background()
+  RedisClient *redis.Client
+)
 
 func InitRedis() {
-    RedisClient = redis.NewClient(&redis.Options{
-        Addr: "localhost:6379", // Redis server address
-    })
+  // read host & port from env, default to localhost:6379 for non-Docker usage
+  host := os.Getenv("REDIS_HOST")
+  if host == "" {
+    host = "localhost"
+  }
 
-    _, err := RedisClient.Ping(Ctx).Result()
-    if err != nil {
-        panic("Failed to connect to Redis: " + err.Error())
-    }
+  port := os.Getenv("REDIS_PORT")
+  if port == "" {
+    port = "6379"
+  }
+
+  addr := fmt.Sprintf("%s:%s", host, port)
+  RedisClient = redis.NewClient(&redis.Options{
+    Addr: addr,
+  })
+
+  if _, err := RedisClient.Ping(Ctx).Result(); err != nil {
+    panic(fmt.Sprintf("Failed to connect to Redis at %s: %v", addr, err))
+  }
 }
