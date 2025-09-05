@@ -1,17 +1,21 @@
 package middlewares
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
 	"otp-service/utils" // for jwtKey and Claim type
+
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 )
 
 func RequireToken() gin.HandlerFunc {
   return func(c *gin.Context) {
+    fmt.Println("Hi Ali!!!")
     auth := c.GetHeader("Authorization")
+    fmt.Println("AUTH=", auth)
     if auth == "" {
       c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Authorization header required"})
       return

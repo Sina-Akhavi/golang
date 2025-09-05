@@ -27,9 +27,9 @@ func main() {
     auth := router.Group("/") // Create a group for protected routes
     auth.Use(middlewares.RequireToken()) // Apply the RequireToken middleware
     {
-        router.GET("/user", handlers.GetSingleUserByPhone)
-        router.GET("/users", handlers.GetUsersWithPagination) // Get paginated list of users
-        router.POST("/users", handlers.CreateUser)            // Create new user
+        auth.GET("/user", handlers.GetSingleUserByPhone)
+        auth.GET("/users", handlers.GetUsersWithPagination) // Get paginated list of users
+        auth.POST("/users", handlers.CreateUser)            // Create new user
     }
     router.Run(":8080") // Start server on port 8080
 }

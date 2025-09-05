@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"otp-service/models"
 	"sort"
@@ -9,7 +10,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 )
-
 
 // GetSingleUserByPhone retrieves a user by phone number
 // @Summary Get a user by phone number
@@ -48,6 +48,8 @@ func GetSingleUserByPhone(c *gin.Context) {
 // @Router /users [get]
 func GetUsersWithPagination(c *gin.Context) {
 	// Default values for pagination
+	fmt.Println("Hi Sina!!!")
+
 	defaultPage := 1
 	defaultLimit := 10
 
