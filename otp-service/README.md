@@ -46,3 +46,89 @@ To run the project locally, follow these steps:
    ```bash
    git clone https://github.com/<your-username>/otp-service.git
    cd otp-service
+   ```
+
+2. **Copy the Example Environment File**:
+   ```bash
+   cp .env.example .env
+   ```
+   Edit `.env` to set your environment variables (e.g., Redis connection, JWT secret).
+
+3. **Start Redis (if not using Docker Compose)**:
+   ```bash
+   docker run -d --name redis -p 6379:6379 redis
+   ```
+
+4. **Install Dependencies**:
+   ```bash
+   go mod tidy
+   ```
+
+5. **Run the Application**:
+   ```bash
+   go run main.go
+   ```
+
+6. **Access Swagger UI**:
+   Open [http://localhost:8080/swagger/](http://localhost:8080/swagger/) in your browser.
+
+---
+
+### **Option 2: Run with Docker Compose**
+
+1. **Start Services**:
+   ```bash
+   docker-compose up --build
+   ```
+
+2. **Access Swagger UI**:
+   Open [http://localhost:8080/swagger/](http://localhost:8080/swagger/) in your browser.
+
+---
+
+## API Endpoints
+
+| Method | Endpoint         | Description                      | Auth Required |
+|--------|------------------|----------------------------------|--------------|
+| POST   | `/request-otp`   | Request OTP for phone number     | No           |
+| POST   | `/validate-otp`  | Validate OTP and get JWT token   | No           |
+| GET    | `/user`          | Get user details                 | Yes          |
+| GET    | `/users`         | List users (paginated)           | Yes          |
+| POST   | `/users`         | Create new user                  | Yes          |
+
+---
+
+## Environment Variables
+
+| Variable         | Description                |
+|------------------|---------------------------|
+| `REDIS_URL`      | Redis connection string   |
+| `JWT_SECRET`     | Secret for JWT signing    |
+| `PORT`           | Server port (default 8080)|
+
+---
+
+## Testing
+
+To run unit tests:
+```bash
+go test ./...
+```
+
+---
+
+## License
+
+This project is licensed under the MIT License.
+
+---
+
+## Contributing
+
+Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
+
+---
+
+## Contact
+
+For questions or support, please open an issue or contact the
