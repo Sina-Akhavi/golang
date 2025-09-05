@@ -2,45 +2,35 @@
 
 ## Overview
 
-The OTP Service is a simple backend application built with Go and the Gin web framework. It provides the following features:
-- Generate and validate OTP (One-Time Password) for user authentication.
-- Token-based authentication using JWT (JSON Web Token).
-- Redis is used to store temporary OTPs for validation.
-
-The service is designed to support authentication for mobile apps, web apps, or other clients. Protected routes require a valid JWT token for access.
+The OTP Service is a backend application built with Go and Gin. It provides:
+- OTP generation and validation for authentication.
+- JWT-based token authentication.
+- Redis for temporary OTP storage.
 
 ---
 
 ## Features
 
-1. **Public Endpoints**:
-   - `/request-otp`: Generate an OTP for a given phone number.
-   - `/validate-otp`: Validate the OTP and receive a JWT token for further authentication.
-
-2. **Protected Endpoints (JWT Required)**:
-   - `/user`: Get details of a single user.
-   - `/users`: Retrieve a paginated list of users.
-   - `/users` (POST): Create a new user.
-
-3. **Swagger Documentation**:
-   - Explore and test the API using the Swagger UI at `/swagger/`.
+- **Public Endpoints**:
+  - `/request-otp`: Generate OTP for a phone number.
+  - `/validate-otp`: Validate OTP and receive JWT token.
+- **Protected Endpoints (JWT Required)**:
+  - `/user`: Get user details.
+  - `/users`: List users (paginated).
+  - `/users` (POST): Create user.
+- **Swagger Documentation**: `/swagger/`
 
 ---
 
 ## Prerequisites
 
-Before running the project, ensure you have the following installed:
 - [Go (1.20+)](https://golang.org/)
 - [Docker](https://www.docker.com/)
 - [Docker Compose](https://docs.docker.com/compose/)
 
 ---
 
-## Running the Project
-
-### **Option 1: Run Locally**
-
-To run the project locally, follow these steps:
+## How to Run Locally
 
 1. **Clone the Repository**:
    ```bash
@@ -48,13 +38,13 @@ To run the project locally, follow these steps:
    cd otp-service
    ```
 
-2. **Copy the Example Environment File**:
+2. **Copy Environment File**:
    ```bash
    cp .env.example .env
    ```
-   Edit `.env` to set your environment variables (e.g., Redis connection, JWT secret).
+   Edit `.env` as needed.
 
-3. **Start Redis (if not using Docker Compose)**:
+3. **Start Redis** (if not using Docker Compose):
    ```bash
    docker run -d --name redis -p 6379:6379 redis
    ```
@@ -70,19 +60,76 @@ To run the project locally, follow these steps:
    ```
 
 6. **Access Swagger UI**:
-   Open [http://localhost:8080/swagger/](http://localhost:8080/swagger/) in your browser.
+   [http://localhost:8080/swagger/](http://localhost:8080/swagger/)
 
 ---
 
-### **Option 2: Run with Docker Compose**
+## How to Run with Docker
 
-1. **Start Services**:
+1. **Build and Start Services**:
    ```bash
    docker-compose up --build
    ```
 
 2. **Access Swagger UI**:
-   Open [http://localhost:8080/swagger/](http://localhost:8080/swagger/) in your browser.
+   [http://localhost:8080/swagger/](http://localhost:8080/swagger/)
+
+---
+
+## Example API Requests & Responses
+
+### 1. Request OTP
+
+**Request**
+```bash
+curl -X POST http://localhost:8080/request-otp \
+  -H "Content-Type: application/json" \
+  -d '{"phone": "+1234567890"}'
+```
+
+**Response**
+```json
+{
+  "message": "OTP sent successfully"
+}
+```
+
+---
+
+### 2. Validate OTP
+
+**Request**
+```bash
+curl -X POST http://localhost:8080/validate-otp \
+  -H "Content-Type: application/json" \
+  -d '{"phone": "+1234567890", "otp": "123456"}'
+```
+
+**Response**
+```json
+{
+  "token": "<jwt_token>"
+}
+```
+
+---
+
+### 3. Get User (JWT Required)
+
+**Request**
+```bash
+curl -X GET http://localhost:8080/user \
+  -H "Authorization: Bearer <jwt_token>"
+```
+
+**Response**
+```json
+{
+  "id": 1,
+  "phone": "+1234567890",
+  "name": "John Doe"
+}
+```
 
 ---
 
@@ -119,16 +166,16 @@ go test ./...
 
 ## License
 
-This project is licensed under the MIT License.
+MIT License.
 
 ---
 
 ## Contributing
 
-Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
+Pull requests are welcome! For major changes, open an issue first.
 
 ---
 
 ## Contact
 
-For questions or support, please open an issue or contact the
+For questions or support, please open an
